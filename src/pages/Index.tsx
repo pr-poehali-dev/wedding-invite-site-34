@@ -1,14 +1,128 @@
 import { useState, useEffect } from "react";
 import Icon from "@/components/ui/icon";
 
-const petals = Array.from({ length: 14 }, (_, i) => ({
-  id: i,
-  left: `${(i * 7 + 3) % 100}%`,
-  animationDuration: `${8 + (i % 6) * 2}s`,
-  animationDelay: `${(i * 1.3) % 12}s`,
-  fontSize: `${10 + (i % 5) * 4}px`,
-  emoji: i % 3 === 0 ? "🌿" : i % 3 === 1 ? "🍃" : "✦",
-}));
+const THEMES = [
+  {
+    id: "rose",
+    label: "Роза",
+    swatch: "#c87a8a",
+    petals: ["🌸", "🌺", "✿"],
+    heroBg: "linear-gradient(160deg, hsl(350,40%,96%) 0%, hsl(40,40%,97%) 50%, hsl(350,30%,95%) 100%)",
+    circle1: "radial-gradient(circle, hsl(340,50%,80%) 0%, transparent 70%)",
+    circle2: "radial-gradient(circle, hsl(38,70%,75%) 0%, transparent 70%)",
+    textSub: "hsl(340,25%,55%)",
+    textTitle: "hsl(340,20%,25%)",
+    textDate: "hsl(340,25%,60%)",
+    textPlace: "hsl(340,20%,40%)",
+    textDown: "hsl(340,25%,60%)",
+    navBg: "rgba(253,248,244,0.92)",
+    navBorder: "rgba(205,150,160,0.15)",
+    navColor: "hsl(340,35%,55%)",
+    dividerColor: "hsl(340,30%,50%)",
+    dividerLine: "hsl(340,35%,55%)",
+    btnBg: "linear-gradient(135deg, hsl(340,45%,60%) 0%, hsl(340,38%,48%) 100%)",
+    btnShadow: "rgba(180,100,120,0.3)",
+    bgPage: "hsl(40,35%,97%)",
+  },
+  {
+    id: "emerald",
+    label: "Изумруд",
+    swatch: "#4a9e70",
+    petals: ["🌿", "🍃", "✦"],
+    heroBg: "linear-gradient(160deg, hsl(150,35%,94%) 0%, hsl(160,25%,97%) 50%, hsl(140,30%,93%) 100%)",
+    circle1: "radial-gradient(circle, hsl(155,50%,60%) 0%, transparent 70%)",
+    circle2: "radial-gradient(circle, hsl(140,45%,65%) 0%, transparent 70%)",
+    textSub: "hsl(155,30%,40%)",
+    textTitle: "hsl(155,25%,18%)",
+    textDate: "hsl(155,25%,45%)",
+    textPlace: "hsl(155,20%,35%)",
+    textDown: "hsl(155,30%,45%)",
+    navBg: "rgba(245,252,248,0.92)",
+    navBorder: "rgba(80,160,110,0.15)",
+    navColor: "hsl(155,40%,35%)",
+    dividerColor: "hsl(155,30%,50%)",
+    dividerLine: "hsl(155,35%,55%)",
+    btnBg: "linear-gradient(135deg, hsl(155,42%,38%) 0%, hsl(155,48%,27%) 100%)",
+    btnShadow: "rgba(40,120,80,0.3)",
+    bgPage: "hsl(150,20%,97%)",
+  },
+  {
+    id: "lavender",
+    label: "Лаванда",
+    swatch: "#9b7ec8",
+    petals: ["💜", "🪻", "✦"],
+    heroBg: "linear-gradient(160deg, hsl(270,35%,95%) 0%, hsl(280,25%,97%) 50%, hsl(260,30%,94%) 100%)",
+    circle1: "radial-gradient(circle, hsl(270,50%,80%) 0%, transparent 70%)",
+    circle2: "radial-gradient(circle, hsl(280,45%,75%) 0%, transparent 70%)",
+    textSub: "hsl(270,25%,50%)",
+    textTitle: "hsl(270,25%,22%)",
+    textDate: "hsl(270,20%,55%)",
+    textPlace: "hsl(270,18%,38%)",
+    textDown: "hsl(270,20%,55%)",
+    navBg: "rgba(248,245,255,0.92)",
+    navBorder: "rgba(150,100,200,0.15)",
+    navColor: "hsl(270,40%,48%)",
+    dividerColor: "hsl(270,28%,55%)",
+    dividerLine: "hsl(270,35%,60%)",
+    btnBg: "linear-gradient(135deg, hsl(270,45%,52%) 0%, hsl(270,50%,40%) 100%)",
+    btnShadow: "rgba(120,70,180,0.3)",
+    bgPage: "hsl(270,20%,97%)",
+  },
+  {
+    id: "sky",
+    label: "Небо",
+    swatch: "#6aaed6",
+    petals: ["🩵", "❄️", "✦"],
+    heroBg: "linear-gradient(160deg, hsl(205,45%,94%) 0%, hsl(210,30%,97%) 50%, hsl(200,35%,93%) 100%)",
+    circle1: "radial-gradient(circle, hsl(205,55%,75%) 0%, transparent 70%)",
+    circle2: "radial-gradient(circle, hsl(195,50%,72%) 0%, transparent 70%)",
+    textSub: "hsl(205,30%,42%)",
+    textTitle: "hsl(210,30%,20%)",
+    textDate: "hsl(205,25%,48%)",
+    textPlace: "hsl(205,20%,36%)",
+    textDown: "hsl(205,25%,50%)",
+    navBg: "rgba(242,249,255,0.92)",
+    navBorder: "rgba(80,150,200,0.15)",
+    navColor: "hsl(205,45%,40%)",
+    dividerColor: "hsl(205,32%,52%)",
+    dividerLine: "hsl(205,40%,58%)",
+    btnBg: "linear-gradient(135deg, hsl(205,50%,45%) 0%, hsl(210,55%,33%) 100%)",
+    btnShadow: "rgba(50,120,180,0.3)",
+    bgPage: "hsl(205,25%,97%)",
+  },
+  {
+    id: "burgundy",
+    label: "Бордо",
+    swatch: "#9e3a4a",
+    petals: ["🌹", "🍂", "✦"],
+    heroBg: "linear-gradient(160deg, hsl(350,30%,94%) 0%, hsl(20,25%,96%) 50%, hsl(5,28%,93%) 100%)",
+    circle1: "radial-gradient(circle, hsl(350,45%,72%) 0%, transparent 70%)",
+    circle2: "radial-gradient(circle, hsl(25,55%,68%) 0%, transparent 70%)",
+    textSub: "hsl(350,28%,45%)",
+    textTitle: "hsl(350,30%,18%)",
+    textDate: "hsl(350,22%,50%)",
+    textPlace: "hsl(350,18%,36%)",
+    textDown: "hsl(350,22%,50%)",
+    navBg: "rgba(255,245,245,0.92)",
+    navBorder: "rgba(180,80,90,0.15)",
+    navColor: "hsl(350,40%,40%)",
+    dividerColor: "hsl(350,28%,48%)",
+    dividerLine: "hsl(350,38%,52%)",
+    btnBg: "linear-gradient(135deg, hsl(350,48%,40%) 0%, hsl(350,52%,28%) 100%)",
+    btnShadow: "rgba(140,40,55,0.3)",
+    bgPage: "hsl(10,18%,97%)",
+  },
+];
+
+const getPetals = (theme: typeof THEMES[0]) =>
+  Array.from({ length: 14 }, (_, i) => ({
+    id: i,
+    left: `${(i * 7 + 3) % 100}%`,
+    animationDuration: `${8 + (i % 6) * 2}s`,
+    animationDelay: `${(i * 1.3) % 12}s`,
+    fontSize: `${10 + (i % 5) * 4}px`,
+    emoji: theme.petals[i % 3],
+  }));
 
 const schedule = [
   { time: "14:00", title: "Сбор гостей", desc: "Встреча и приветственный бокал шампанского" },
@@ -27,6 +141,10 @@ export default function Index() {
   const [rsvpAttend, setRsvpAttend] = useState<null | boolean>(null);
   const [rsvpSent, setRsvpSent] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [themeId, setThemeId] = useState("rose");
+
+  const theme = THEMES.find((t) => t.id === themeId) ?? THEMES[0];
+  const petals = getPetals(theme);
 
   const scrollTo = (id: string) => {
     const el = document.getElementById(id);
@@ -60,7 +178,7 @@ export default function Index() {
   ];
 
   return (
-    <div className="min-h-screen" style={{ background: "hsl(150, 20%, 97%)" }}>
+    <div className="min-h-screen" style={{ background: theme.bgPage }}>
       {/* Floating petals */}
       {petals.map((p) => (
         <div
@@ -82,15 +200,16 @@ export default function Index() {
       <nav
         className="fixed top-0 left-0 right-0 z-50"
         style={{
-          background: "rgba(245, 252, 248, 0.92)",
+          background: theme.navBg,
           backdropFilter: "blur(16px)",
-          borderBottom: "1px solid rgba(80, 160, 110, 0.15)",
+          borderBottom: `1px solid ${theme.navBorder}`,
+          transition: "background 0.5s ease",
         }}
       >
         <div className="max-w-5xl mx-auto px-6 py-4 flex items-center justify-between">
           <div
             className="font-cormorant text-xl italic cursor-pointer"
-            style={{ color: "hsl(155, 40%, 35%)" }}
+            style={{ color: theme.navColor, transition: "color 0.5s" }}
             onClick={() => scrollTo("home")}
           >
             А & М
@@ -101,7 +220,8 @@ export default function Index() {
             {navLinks.map((l) => (
               <button
                 key={l.id}
-                className={`nav-link ${activeSection === l.id ? "!text-[hsl(155,40%,35%)]" : ""}`}
+                className="nav-link"
+                style={{ color: activeSection === l.id ? theme.navColor : undefined, transition: "color 0.5s" }}
                 onClick={() => scrollTo(l.id)}
               >
                 {l.label}
@@ -111,13 +231,13 @@ export default function Index() {
 
           {/* Mobile burger */}
           <button className="md:hidden" onClick={() => setMenuOpen(!menuOpen)}>
-            <Icon name={menuOpen ? "X" : "Menu"} size={20} style={{ color: "hsl(155,40%,35%)" }} />
+            <Icon name={menuOpen ? "X" : "Menu"} size={20} style={{ color: theme.navColor }} />
           </button>
         </div>
 
         {/* Mobile menu */}
         {menuOpen && (
-          <div className="md:hidden px-6 pb-4 flex flex-col gap-4 border-t" style={{ borderColor: "rgba(205,150,160,0.15)" }}>
+          <div className="md:hidden px-6 pb-4 flex flex-col gap-4 border-t" style={{ borderColor: theme.navBorder }}>
             {navLinks.map((l) => (
               <button key={l.id} className="nav-link text-left" onClick={() => scrollTo(l.id)}>
                 {l.label}
@@ -131,84 +251,115 @@ export default function Index() {
       <section
         id="home"
         className="relative min-h-screen flex flex-col items-center justify-center text-center overflow-hidden px-6"
-        style={{
-          background: "linear-gradient(160deg, hsl(150,35%,94%) 0%, hsl(160,25%,97%) 50%, hsl(140,30%,93%) 100%)",
-        }}
+        style={{ background: theme.heroBg, transition: "background 0.6s ease" }}
       >
-        {/* Decorative circles */}
+        {/* Full-screen background flowers */}
         <div
-          className="absolute top-20 left-10 w-64 h-64 rounded-full opacity-20"
-          style={{ background: "radial-gradient(circle, hsl(155,50%,60%) 0%, transparent 70%)" }}
-        />
-        <div
-          className="absolute bottom-20 right-10 w-96 h-96 rounded-full opacity-15"
-          style={{ background: "radial-gradient(circle, hsl(140,45%,65%) 0%, transparent 70%)" }}
+          className="absolute inset-0 z-0"
+          style={{
+            backgroundImage: `url(https://cdn.poehali.dev/projects/41813e7f-1d84-4f4e-81b9-f846028d38fa/files/affd477e-5fd8-4ba4-b7d9-a5f78887ab55.jpg)`,
+            backgroundSize: "cover",
+            backgroundPosition: "center",
+            opacity: 0.12,
+          }}
         />
 
-        {/* Hero image */}
-        <div className="relative z-10 animate-fade-in-up mb-8">
-          <div
-            className="w-48 h-48 md:w-64 md:h-64 rounded-full overflow-hidden mx-auto"
-            style={{
-              border: "3px solid rgba(80,160,110,0.3)",
-              boxShadow: "0 20px 60px rgba(50,130,80,0.2), inset 0 0 0 6px rgba(255,255,255,0.8)",
-            }}
-          >
-            <img
-              src="https://cdn.poehali.dev/projects/41813e7f-1d84-4f4e-81b9-f846028d38fa/files/affd477e-5fd8-4ba4-b7d9-a5f78887ab55.jpg"
-              alt="Wedding flowers"
-              className="w-full h-full object-cover"
-            />
+        {/* Decorative glow circles */}
+        <div className="absolute top-20 left-10 w-64 h-64 rounded-full opacity-20 z-0"
+          style={{ background: theme.circle1 }} />
+        <div className="absolute bottom-20 right-10 w-96 h-96 rounded-full opacity-15 z-0"
+          style={{ background: theme.circle2 }} />
+
+        {/* Theme switcher */}
+        <div className="absolute top-24 right-6 z-20 flex flex-col gap-2 items-end">
+          <span className="text-xs uppercase tracking-widest mb-1" style={{ color: theme.textDate, opacity: 0.7 }}>Тема</span>
+          <div className="flex gap-2">
+            {THEMES.map((t) => (
+              <button
+                key={t.id}
+                onClick={() => setThemeId(t.id)}
+                title={t.label}
+                className="transition-all duration-200"
+                style={{
+                  width: 22,
+                  height: 22,
+                  borderRadius: "50%",
+                  background: t.swatch,
+                  border: themeId === t.id ? "2px solid white" : "2px solid transparent",
+                  boxShadow: themeId === t.id ? `0 0 0 2px ${t.swatch}` : "0 2px 6px rgba(0,0,0,0.15)",
+                  cursor: "pointer",
+                  transform: themeId === t.id ? "scale(1.2)" : "scale(1)",
+                }}
+              />
+            ))}
           </div>
         </div>
 
-        <p
-          className="font-cormorant italic text-lg md:text-xl animate-fade-in-up delay-200 mb-2"
-          style={{ color: "hsl(155,30%,40%)" }}
-        >
-          Мы рады пригласить вас на нашу свадьбу
-        </p>
+        {/* Content */}
+        <div className="relative z-10 flex flex-col items-center">
+          <p
+            className="font-cormorant italic text-lg md:text-xl animate-fade-in-up delay-200 mb-2"
+            style={{ color: theme.textSub, transition: "color 0.5s" }}
+          >
+            Мы рады пригласить вас на нашу свадьбу
+          </p>
 
-        <h1
-          className="font-cormorant text-6xl md:text-8xl lg:text-9xl font-light animate-fade-in-up delay-300 mb-4 leading-none"
-          style={{ color: "hsl(155,25%,18%)" }}
-        >
-          Анна
-          <span className="gold-text mx-4 md:mx-6 text-5xl md:text-7xl">&</span>
-          Михаил
-        </h1>
+          <h1
+            className="font-cormorant text-6xl md:text-8xl lg:text-9xl font-light animate-fade-in-up delay-300 mb-4 leading-none"
+            style={{ color: theme.textTitle, transition: "color 0.5s" }}
+          >
+            Анна
+            <span className="gold-text mx-4 md:mx-6 text-5xl md:text-7xl">&</span>
+            Михаил
+          </h1>
 
-        <div className="floral-divider animate-fade-in-up delay-400 my-4">
-          <span className="font-cormorant italic text-base" style={{ color: "hsl(155,25%,45%)" }}>
-            14 июня 2026 года
-          </span>
+          <div className="floral-divider animate-fade-in-up delay-400 my-4"
+            style={{ ["--divider-color" as string]: theme.dividerLine }}>
+            <span className="font-cormorant italic text-base" style={{ color: theme.textDate, transition: "color 0.5s" }}>
+              14 июня 2026 года
+            </span>
+          </div>
+
+          <p
+            className="font-cormorant text-xl md:text-2xl animate-fade-in-up delay-500 mb-8"
+            style={{ color: theme.textPlace, transition: "color 0.5s" }}
+          >
+            Москва · Усадьба «Архангельское»
+          </p>
+
+          <CountdownTimer targetDate="2026-06-14T14:00:00" titleColor={theme.textTitle} labelColor={theme.textDate} />
+
+          <button
+            className="animate-fade-in-up delay-800 mt-8"
+            style={{
+              background: theme.btnBg,
+              boxShadow: `0 4px 20px ${theme.btnShadow}`,
+              color: "white",
+              border: "none",
+              padding: "14px 40px",
+              borderRadius: "50px",
+              fontFamily: "Montserrat, sans-serif",
+              fontWeight: 400,
+              fontSize: "0.8rem",
+              letterSpacing: "0.15em",
+              textTransform: "uppercase",
+              cursor: "pointer",
+              transition: "all 0.3s ease",
+            }}
+            onClick={() => scrollTo("rsvp")}
+          >
+            Подтвердить присутствие
+          </button>
+
+          <button
+            className="animate-fade-in-up delay-1000 mt-4 flex items-center gap-2"
+            style={{ color: theme.textDown, fontSize: "0.8rem", letterSpacing: "0.1em", background: "none", border: "none", cursor: "pointer", transition: "color 0.5s" }}
+            onClick={() => scrollTo("details")}
+          >
+            <span>Узнать детали</span>
+            <Icon name="ChevronDown" size={16} />
+          </button>
         </div>
-
-        <p
-          className="font-cormorant text-xl md:text-2xl animate-fade-in-up delay-500 mb-8"
-          style={{ color: "hsl(155,20%,35%)" }}
-        >
-          Москва · Усадьба «Архангельское»
-        </p>
-
-        {/* Countdown */}
-        <CountdownTimer targetDate="2026-06-14T14:00:00" />
-
-        <button
-          className="btn-rose animate-fade-in-up delay-800 mt-8"
-          onClick={() => scrollTo("rsvp")}
-        >
-          Подтвердить присутствие
-        </button>
-
-        <button
-          className="animate-fade-in-up delay-1000 mt-4 flex items-center gap-2"
-          style={{ color: "hsl(155,30%,45%)", fontSize: "0.8rem", letterSpacing: "0.1em", background: "none", border: "none", cursor: "pointer" }}
-          onClick={() => scrollTo("details")}
-        >
-          <span>Узнать детали</span>
-          <Icon name="ChevronDown" size={16} />
-        </button>
       </section>
 
       {/* DETAILS */}
@@ -663,7 +814,7 @@ function SectionTitle({ title, subtitle }: { title: string; subtitle: string }) 
   );
 }
 
-function CountdownTimer({ targetDate }: { targetDate: string }) {
+function CountdownTimer({ targetDate, titleColor, labelColor }: { targetDate: string; titleColor: string; labelColor: string }) {
   const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
 
   useEffect(() => {
@@ -693,13 +844,13 @@ function CountdownTimer({ targetDate }: { targetDate: string }) {
         <div key={i} className="text-center">
           <div
             className="font-cormorant text-4xl md:text-5xl font-light tabular-nums"
-            style={{ color: "hsl(340,20%,25%)" }}
+            style={{ color: titleColor, transition: "color 0.5s" }}
           >
             {String(item.val).padStart(2, "0")}
           </div>
           <div
             className="text-xs uppercase tracking-widest mt-1"
-            style={{ color: "hsl(340,25%,60%)", fontFamily: "Montserrat, sans-serif" }}
+            style={{ color: labelColor, fontFamily: "Montserrat, sans-serif", transition: "color 0.5s" }}
           >
             {item.label}
           </div>
