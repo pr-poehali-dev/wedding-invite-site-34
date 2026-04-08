@@ -1,6 +1,45 @@
 import { useState, useEffect } from "react";
 import Icon from "@/components/ui/icon";
 
+const BG_OPTIONS = [
+  {
+    id: "bouquet",
+    label: "Букет",
+    emoji: "💐",
+    url: "https://cdn.poehali.dev/projects/41813e7f-1d84-4f4e-81b9-f846028d38fa/files/affd477e-5fd8-4ba4-b7d9-a5f78887ab55.jpg",
+  },
+  {
+    id: "watercolor",
+    label: "Акварель",
+    emoji: "🎨",
+    url: "https://cdn.poehali.dev/projects/41813e7f-1d84-4f4e-81b9-f846028d38fa/files/95bdba07-bed9-4450-bab5-b5ac27ace4ec.jpg",
+  },
+  {
+    id: "botanical",
+    label: "Ботаника",
+    emoji: "🌿",
+    url: "https://cdn.poehali.dev/projects/41813e7f-1d84-4f4e-81b9-f846028d38fa/files/1fa93ce1-a7a2-4a8d-baaf-16f89fc1067e.jpg",
+  },
+  {
+    id: "petals",
+    label: "Лепестки",
+    emoji: "🌸",
+    url: "https://cdn.poehali.dev/projects/41813e7f-1d84-4f4e-81b9-f846028d38fa/files/c6792906-e626-4dcb-97bf-9a4fb2b22130.jpg",
+  },
+  {
+    id: "details",
+    label: "Детали",
+    emoji: "💍",
+    url: "https://cdn.poehali.dev/projects/41813e7f-1d84-4f4e-81b9-f846028d38fa/files/c24637aa-6bc5-466d-96e8-8b3beb8c1c80.jpg",
+  },
+  {
+    id: "field",
+    label: "Полевые",
+    emoji: "🌼",
+    url: "https://cdn.poehali.dev/projects/41813e7f-1d84-4f4e-81b9-f846028d38fa/files/bf8e4edd-8045-49eb-9317-63c423e4526f.jpg",
+  },
+];
+
 const THEMES = [
   {
     id: "rose",
@@ -142,9 +181,11 @@ export default function Index() {
   const [rsvpSent, setRsvpSent] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [themeId, setThemeId] = useState("rose");
+  const [bgId, setBgId] = useState("bouquet");
 
   const theme = THEMES.find((t) => t.id === themeId) ?? THEMES[0];
   const petals = getPetals(theme);
+  const currentBg = BG_OPTIONS.find((b) => b.id === bgId) ?? BG_OPTIONS[0];
 
   const scrollTo = (id: string) => {
     const el = document.getElementById(id);
@@ -257,10 +298,11 @@ export default function Index() {
         <div
           className="absolute inset-0 z-0"
           style={{
-            backgroundImage: `url(https://cdn.poehali.dev/projects/41813e7f-1d84-4f4e-81b9-f846028d38fa/files/affd477e-5fd8-4ba4-b7d9-a5f78887ab55.jpg)`,
+            backgroundImage: `url(${currentBg.url})`,
             backgroundSize: "cover",
             backgroundPosition: "center",
-            opacity: 0.12,
+            opacity: 0.13,
+            transition: "background-image 0.5s ease",
           }}
         />
 
@@ -270,28 +312,58 @@ export default function Index() {
         <div className="absolute bottom-20 right-10 w-96 h-96 rounded-full opacity-15 z-0"
           style={{ background: theme.circle2 }} />
 
-        {/* Theme switcher */}
-        <div className="absolute top-24 right-6 z-20 flex flex-col gap-2 items-end">
-          <span className="text-xs uppercase tracking-widest mb-1" style={{ color: theme.textDate, opacity: 0.7 }}>Тема</span>
-          <div className="flex gap-2">
-            {THEMES.map((t) => (
-              <button
-                key={t.id}
-                onClick={() => setThemeId(t.id)}
-                title={t.label}
-                className="transition-all duration-200"
-                style={{
-                  width: 22,
-                  height: 22,
-                  borderRadius: "50%",
-                  background: t.swatch,
-                  border: themeId === t.id ? "2px solid white" : "2px solid transparent",
-                  boxShadow: themeId === t.id ? `0 0 0 2px ${t.swatch}` : "0 2px 6px rgba(0,0,0,0.15)",
-                  cursor: "pointer",
-                  transform: themeId === t.id ? "scale(1.2)" : "scale(1)",
-                }}
-              />
-            ))}
+        {/* Switchers panel */}
+        <div className="absolute top-24 right-4 z-20 flex flex-col gap-3 items-end">
+          {/* Theme switcher */}
+          <div className="flex flex-col items-end gap-1">
+            <span className="text-xs uppercase tracking-widest" style={{ color: theme.textDate, opacity: 0.6 }}>Тема</span>
+            <div className="flex gap-1.5">
+              {THEMES.map((t) => (
+                <button
+                  key={t.id}
+                  onClick={() => setThemeId(t.id)}
+                  title={t.label}
+                  className="transition-all duration-200"
+                  style={{
+                    width: 20,
+                    height: 20,
+                    borderRadius: "50%",
+                    background: t.swatch,
+                    border: themeId === t.id ? "2px solid white" : "2px solid transparent",
+                    boxShadow: themeId === t.id ? `0 0 0 2px ${t.swatch}` : "0 2px 6px rgba(0,0,0,0.15)",
+                    cursor: "pointer",
+                    transform: themeId === t.id ? "scale(1.25)" : "scale(1)",
+                  }}
+                />
+              ))}
+            </div>
+          </div>
+
+          {/* Background switcher */}
+          <div className="flex flex-col items-end gap-1">
+            <span className="text-xs uppercase tracking-widest" style={{ color: theme.textDate, opacity: 0.6 }}>Фон</span>
+            <div className="flex gap-1.5">
+              {BG_OPTIONS.map((b) => (
+                <button
+                  key={b.id}
+                  onClick={() => setBgId(b.id)}
+                  title={b.label}
+                  className="transition-all duration-200 flex items-center justify-center text-sm"
+                  style={{
+                    width: 28,
+                    height: 28,
+                    borderRadius: "8px",
+                    backgroundImage: `url(${b.url})`,
+                    backgroundSize: "cover",
+                    backgroundPosition: "center",
+                    border: bgId === b.id ? "2px solid white" : "2px solid rgba(255,255,255,0.3)",
+                    boxShadow: bgId === b.id ? "0 0 0 2px rgba(0,0,0,0.25)" : "0 2px 6px rgba(0,0,0,0.15)",
+                    cursor: "pointer",
+                    transform: bgId === b.id ? "scale(1.2)" : "scale(1)",
+                  }}
+                />
+              ))}
+            </div>
           </div>
         </div>
 
