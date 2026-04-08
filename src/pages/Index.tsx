@@ -7,7 +7,7 @@ const petals = Array.from({ length: 14 }, (_, i) => ({
   animationDuration: `${8 + (i % 6) * 2}s`,
   animationDelay: `${(i * 1.3) % 12}s`,
   fontSize: `${10 + (i % 5) * 4}px`,
-  emoji: i % 3 === 0 ? "🌸" : i % 3 === 1 ? "🌺" : "✿",
+  emoji: i % 3 === 0 ? "🌿" : i % 3 === 1 ? "🍃" : "✦",
 }));
 
 const schedule = [
@@ -60,7 +60,7 @@ export default function Index() {
   ];
 
   return (
-    <div className="min-h-screen" style={{ background: "hsl(40, 35%, 97%)" }}>
+    <div className="min-h-screen" style={{ background: "hsl(150, 20%, 97%)" }}>
       {/* Floating petals */}
       {petals.map((p) => (
         <div
@@ -82,15 +82,15 @@ export default function Index() {
       <nav
         className="fixed top-0 left-0 right-0 z-50"
         style={{
-          background: "rgba(253, 248, 244, 0.92)",
+          background: "rgba(245, 252, 248, 0.92)",
           backdropFilter: "blur(16px)",
-          borderBottom: "1px solid rgba(205, 150, 160, 0.15)",
+          borderBottom: "1px solid rgba(80, 160, 110, 0.15)",
         }}
       >
         <div className="max-w-5xl mx-auto px-6 py-4 flex items-center justify-between">
           <div
             className="font-cormorant text-xl italic cursor-pointer"
-            style={{ color: "hsl(340, 35%, 55%)" }}
+            style={{ color: "hsl(155, 40%, 35%)" }}
             onClick={() => scrollTo("home")}
           >
             А & М
@@ -101,7 +101,7 @@ export default function Index() {
             {navLinks.map((l) => (
               <button
                 key={l.id}
-                className={`nav-link ${activeSection === l.id ? "!text-[hsl(340,45%,55%)]" : ""}`}
+                className={`nav-link ${activeSection === l.id ? "!text-[hsl(155,40%,35%)]" : ""}`}
                 onClick={() => scrollTo(l.id)}
               >
                 {l.label}
@@ -111,7 +111,7 @@ export default function Index() {
 
           {/* Mobile burger */}
           <button className="md:hidden" onClick={() => setMenuOpen(!menuOpen)}>
-            <Icon name={menuOpen ? "X" : "Menu"} size={20} style={{ color: "hsl(340,35%,55%)" }} />
+            <Icon name={menuOpen ? "X" : "Menu"} size={20} style={{ color: "hsl(155,40%,35%)" }} />
           </button>
         </div>
 
@@ -132,17 +132,17 @@ export default function Index() {
         id="home"
         className="relative min-h-screen flex flex-col items-center justify-center text-center overflow-hidden px-6"
         style={{
-          background: "linear-gradient(160deg, hsl(350,40%,96%) 0%, hsl(40,40%,97%) 50%, hsl(350,30%,95%) 100%)",
+          background: "linear-gradient(160deg, hsl(150,35%,94%) 0%, hsl(160,25%,97%) 50%, hsl(140,30%,93%) 100%)",
         }}
       >
         {/* Decorative circles */}
         <div
           className="absolute top-20 left-10 w-64 h-64 rounded-full opacity-20"
-          style={{ background: "radial-gradient(circle, hsl(340,50%,80%) 0%, transparent 70%)" }}
+          style={{ background: "radial-gradient(circle, hsl(155,50%,60%) 0%, transparent 70%)" }}
         />
         <div
           className="absolute bottom-20 right-10 w-96 h-96 rounded-full opacity-15"
-          style={{ background: "radial-gradient(circle, hsl(38,70%,75%) 0%, transparent 70%)" }}
+          style={{ background: "radial-gradient(circle, hsl(140,45%,65%) 0%, transparent 70%)" }}
         />
 
         {/* Hero image */}
@@ -150,8 +150,8 @@ export default function Index() {
           <div
             className="w-48 h-48 md:w-64 md:h-64 rounded-full overflow-hidden mx-auto"
             style={{
-              border: "3px solid rgba(200,150,160,0.3)",
-              boxShadow: "0 20px 60px rgba(180,100,120,0.2), inset 0 0 0 6px rgba(255,255,255,0.8)",
+              border: "3px solid rgba(80,160,110,0.3)",
+              boxShadow: "0 20px 60px rgba(50,130,80,0.2), inset 0 0 0 6px rgba(255,255,255,0.8)",
             }}
           >
             <img
@@ -164,14 +164,14 @@ export default function Index() {
 
         <p
           className="font-cormorant italic text-lg md:text-xl animate-fade-in-up delay-200 mb-2"
-          style={{ color: "hsl(340,25%,55%)" }}
+          style={{ color: "hsl(155,30%,40%)" }}
         >
           Мы рады пригласить вас на нашу свадьбу
         </p>
 
         <h1
           className="font-cormorant text-6xl md:text-8xl lg:text-9xl font-light animate-fade-in-up delay-300 mb-4 leading-none"
-          style={{ color: "hsl(340,20%,25%)" }}
+          style={{ color: "hsl(155,25%,18%)" }}
         >
           Анна
           <span className="gold-text mx-4 md:mx-6 text-5xl md:text-7xl">&</span>
@@ -179,14 +179,14 @@ export default function Index() {
         </h1>
 
         <div className="floral-divider animate-fade-in-up delay-400 my-4">
-          <span className="font-cormorant italic text-base" style={{ color: "hsl(340,25%,60%)" }}>
+          <span className="font-cormorant italic text-base" style={{ color: "hsl(155,25%,45%)" }}>
             14 июня 2026 года
           </span>
         </div>
 
         <p
           className="font-cormorant text-xl md:text-2xl animate-fade-in-up delay-500 mb-8"
-          style={{ color: "hsl(340,20%,40%)" }}
+          style={{ color: "hsl(155,20%,35%)" }}
         >
           Москва · Усадьба «Архангельское»
         </p>
@@ -203,7 +203,7 @@ export default function Index() {
 
         <button
           className="animate-fade-in-up delay-1000 mt-4 flex items-center gap-2"
-          style={{ color: "hsl(340,25%,60%)", fontSize: "0.8rem", letterSpacing: "0.1em", background: "none", border: "none", cursor: "pointer" }}
+          style={{ color: "hsl(155,30%,45%)", fontSize: "0.8rem", letterSpacing: "0.1em", background: "none", border: "none", cursor: "pointer" }}
           onClick={() => scrollTo("details")}
         >
           <span>Узнать детали</span>
